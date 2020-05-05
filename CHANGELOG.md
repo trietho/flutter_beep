@@ -1,3 +1,8 @@
+## 0.2.0
+
+* Official release
+
+
 ## 0.0.3
 
 * Update readme and changelog
