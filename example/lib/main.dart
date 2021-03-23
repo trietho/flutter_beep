@@ -15,22 +15,27 @@ class MyApp extends StatelessWidget {
           child: Column(
             children: <Widget>[
               TextButton(
-                  child: Text("Beep Success"),
-                  onPressed: () => FlutterBeep.beep()),
+                child: Text("Beep Success"),
+                onPressed: () => FlutterBeep.beep(),
+              ),
               TextButton(
-                  child: Text("Beep Fail"),
-                  onPressed: () => FlutterBeep.beep(false)),
+                child: Text("Beep Fail"),
+                onPressed: () => FlutterBeep.beep(false),
+              ),
               TextButton(
-                  child: Text("Beep Android Custom"),
-                  onPressed: () => FlutterBeep.playSysSound(
-                      AndroidSoundIDs.TONE_CDMA_ABBR_ALERT)),
+                child: Text("Beep Android Custom"),
+                onPressed: () => FlutterBeep.playSysSound(
+                    AndroidSoundIDs.TONE_CDMA_ABBR_ALERT),
+              ),
               TextButton(
-                  child: Text("Beep something"),
-                  onPressed: () => FlutterBeep.playSysSound(41)),
+                child: Text("Beep something"),
+                onPressed: () => FlutterBeep.playSysSound(41),
+              ),
               TextButton(
-                  child: Text("Beep iOS Custom"),
-                  onPressed: () =>
-                      FlutterBeep.playSysSound(iOSSoundIDs.AudioToneBusy)),
+                child: Text("Beep iOS Custom"),
+                onPressed: () =>
+                    FlutterBeep.playSysSound(iOSSoundIDs.AudioToneBusy),
+              ),
             ],
           ),
         ),

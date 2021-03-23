@@ -5,11 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('Verify that app with FlutterBeep import renders',
       (WidgetTester tester) async {
-    // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
     await tester.pump();
 
-    // Verify that platform version is retrieved.
     expect(
       find.byWidgetPredicate(
         (Widget widget) =>
@@ -22,14 +20,12 @@ void main() {
 
   testWidgets('Verify that call of FlutterBeep.beep() does not crash',
       (WidgetTester tester) async {
-    // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
     await tester.pump();
 
     await tester.tap(find.text("Beep Success"));
     await tester.pump();
 
-    // Verify that platform version is retrieved.
     expect(
       find.byWidgetPredicate(
         (Widget widget) =>

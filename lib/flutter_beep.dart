@@ -7,7 +7,7 @@ class FlutterBeep {
   static const MethodChannel _channel = const MethodChannel('flutter_beep');
 
   static Future<void> playSysSound(int soundId) async {
-    var args = <String, dynamic>{"soundId": soundId};
+    var args = {"soundId": soundId};
     if (Platform.isAndroid) {
       await _channel.invokeMethod('stopSysSound');
     }
