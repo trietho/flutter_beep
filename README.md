@@ -1,6 +1,6 @@
 # flutter_beep
 A very lite module to play system sounds and beep for flutter apps (no sound files)
-**Sponsor by**
+## Sponsor by
 [Go Noter app](https://gonoter.com "Go Noter - Group travel asssistant") - Group travel and expenses assistant!
 
 

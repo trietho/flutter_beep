@@ -1,3 +1,6 @@
+## 0.3.1
+
+* Support null safety
 ## 0.3.0
 
 * Support null safety
