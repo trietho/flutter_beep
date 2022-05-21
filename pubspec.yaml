@@ -1,6 +1,6 @@
 name: flutter_beep
 description: A very lite module to play system sounds and beep for flutter apps (no sound files)
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/trietho/flutter_beep.git
 
 environment:
