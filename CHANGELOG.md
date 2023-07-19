@@ -1,3 +1,7 @@
+## 1.2.0
+* Upgrade to gradle 8
+* Upgrade compileSDK
+
 ## 1.1.0
 * Upgraded Android dependencies
 * Refactored methodchannel registration
