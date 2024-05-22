@@ -3,5 +3,10 @@
 .idea
 .packages
 .pub/
+.fvm*
+.vscode*
 
 build/
+
+# FVM Version Cache
+.fvm/
