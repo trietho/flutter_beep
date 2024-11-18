@@ -23,7 +23,7 @@ apply plugin: 'com.android.library'
 
 android {
     namespace "com.gonoter.flutter_beep"
-    compileSdkVersion 31
+    compileSdkVersion 34
 
     defaultConfig {
         minSdkVersion 16
