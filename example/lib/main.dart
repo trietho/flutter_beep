@@ -8,9 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Beep Plugin example app'),
-        ),
+        appBar: AppBar(title: const Text('Flutter Beep Plugin example app')),
         body: Center(
           child: Column(
             children: <Widget>[
@@ -25,7 +23,8 @@ class MyApp extends StatelessWidget {
               ElevatedButton(
                 child: Text("Beep Android Custom"),
                 onPressed: () => FlutterBeep.playSysSound(
-                    AndroidSoundIDs.TONE_CDMA_ABBR_ALERT),
+                  AndroidSoundIDs.TONE_CDMA_ABBR_ALERT,
+                ),
               ),
               ElevatedButton(
                 child: Text("Beep something"),
