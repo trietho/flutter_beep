@@ -23,10 +23,10 @@ apply plugin: 'com.android.library'
 
 android {
     namespace "com.gonoter.flutter_beep"
-    compileSdkVersion 31
+    compileSdkVersion flutter.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion flutter.minSdkVersion
     }
     lintOptions {
         disable 'InvalidPackage'
