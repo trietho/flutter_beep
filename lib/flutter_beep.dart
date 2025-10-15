@@ -6,17 +6,342 @@ import 'dart:io' show Platform;
 class FlutterBeep {
   static const MethodChannel _channel = const MethodChannel('flutter_beep');
 
-  static Future<void> playSysSound(int soundId) async {
-    var args = <String, dynamic>{"soundId": soundId};
+  /// Plays a system sound with optional parameters
+  ///
+  /// [soundId] - The system sound ID to play
+  /// [volume] - Volume level (0-100), only supported on Android
+  /// [duration] - Duration in milliseconds, only supported on Android
+  /// [vibrate] - Whether to vibrate while playing the sound (iOS only uses this for alert sounds)
+  static Future<void> playSysSound(
+    int soundId, {
+    int? volume,
+    int? duration,
+    bool vibrate = false,
+  }) async {
+    var args = <String, dynamic>{
+      "soundId": soundId,
+      if (volume != null) "volume": volume,
+      if (duration != null) "duration": duration,
+      if (vibrate) "vibrate": vibrate,
+    };
     if (Platform.isAndroid) await _channel.invokeMethod('stopSysSound');
     return _channel.invokeMethod('playSysSound', args);
   }
 
+  /// Sets the default volume for sounds (Android only, 0-100)
+  static Future<void> setVolume(int volume) async {
+    if (Platform.isAndroid) {
+      return _channel.invokeMethod('setVolume', {"volume": volume});
+    }
+  }
+
+  /// Vibrates the device
+  static Future<void> vibrate() async {
+    if (Platform.isIOS) {
+      return _channel.invokeMethod('vibrate');
+    } else if (Platform.isAndroid) {
+      // On Android, use a very short tone with vibration
+      return playSysSound(AndroidSoundIDs.TONE_PROP_BEEP, duration: 1);
+    }
+  }
+
+  /// Plays a beep sound (legacy method for backwards compatibility)
   static Future<void> beep([bool success = true]) {
     var soundId =
         (Platform.isAndroid) ? (success ? 24 : 25) : (success ? 1256 : 1257);
     return playSysSound(soundId);
   }
+
+  // ===== Helper Methods for Common Use Cases =====
+
+  /// Plays a success sound
+  static Future<void> success() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_ACK
+        : iOSSoundIDs.Headset_AnswerCall;
+    return playSysSound(soundId);
+  }
+
+  /// Plays an error sound
+  static Future<void> error() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_NACK
+        : iOSSoundIDs.AudioToneError;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a warning sound
+  static Future<void> warning() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_SUP_ERROR
+        : iOSSoundIDs.LowPower;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a notification sound
+  static Future<void> notification() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_BEEP2
+        : iOSSoundIDs.SMSReceived;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a click/tap sound
+  static Future<void> click() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_BEEP
+        : iOSSoundIDs.KeyPressed1;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a confirm sound
+  static Future<void> confirm() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_SUP_CONFIRM
+        : iOSSoundIDs.JBL_Confirm;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a cancel sound
+  static Future<void> cancel() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_CDMA_ABBR_ALERT
+        : iOSSoundIDs.JBL_Cancel;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a camera shutter sound
+  static Future<void> cameraShutter() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_PROMPT
+        : iOSSoundIDs.CameraShutter;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a start recording sound
+  static Future<void> startRecording() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_CDMA_CONFIRM
+        : iOSSoundIDs.BeginRecording;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a stop recording sound
+  static Future<void> stopRecording() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_CDMA_ANSWER
+        : iOSSoundIDs.EndRecording;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a busy tone
+  static Future<void> busy() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_SUP_BUSY
+        : iOSSoundIDs.AudioToneBusy;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a call waiting sound
+  static Future<void> callWaiting() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_SUP_CALL_WAITING
+        : iOSSoundIDs.AudioToneCallWaiting;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a ringtone
+  static Future<void> ringtone() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_SUP_RINGTONE
+        : iOSSoundIDs.VCRinging;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a mail received sound
+  static Future<void> mailReceived() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_BEEP2
+        : iOSSoundIDs.MailReceived;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a voicemail sound
+  static Future<void> voicemail() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_CDMA_ALERT_NETWORK_LITE
+        : iOSSoundIDs.VoicemailReceived;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a calendar alert sound
+  static Future<void> calendarAlert() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_CDMA_ALERT_CALL_GUARD
+        : iOSSoundIDs.CalendarAlert;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a screen locked sound
+  static Future<void> screenLocked() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_BEEP
+        : iOSSoundIDs.ScreenLocked;
+    return playSysSound(soundId);
+  }
+
+  /// Plays a screen unlocked sound
+  static Future<void> screenUnlocked() {
+    var soundId = Platform.isAndroid
+        ? AndroidSoundIDs.TONE_PROP_ACK
+        : iOSSoundIDs.ScreenUnlocked;
+    return playSysSound(soundId);
+  }
+
+  // ===== Sound Sequences =====
+
+  /// Plays a sequence of sounds with delays between them
+  ///
+  /// [sounds] - List of sound IDs to play
+  /// [delayMs] - Delay in milliseconds between sounds (default: 200ms)
+  static Future<void> playSequence(List<int> sounds, {int delayMs = 200}) async {
+    for (var soundId in sounds) {
+      await playSysSound(soundId);
+      if (sounds.indexOf(soundId) < sounds.length - 1) {
+        await Future.delayed(Duration(milliseconds: delayMs));
+      }
+    }
+  }
+
+  /// Plays a sequence of helper method sounds
+  ///
+  /// [soundMethods] - List of Future<void> Function() to execute in sequence
+  /// [delayMs] - Delay in milliseconds between sounds (default: 200ms)
+  static Future<void> playMethodSequence(
+    List<Future<void> Function()> soundMethods, {
+    int delayMs = 200,
+  }) async {
+    for (var i = 0; i < soundMethods.length; i++) {
+      await soundMethods[i]();
+      if (i < soundMethods.length - 1) {
+        await Future.delayed(Duration(milliseconds: delayMs));
+      }
+    }
+  }
+
+  /// Plays a success notification sequence
+  static Future<void> successSequence() {
+    return playMethodSequence([click, success], delayMs: 100);
+  }
+
+  /// Plays an error notification sequence
+  static Future<void> errorSequence() {
+    return playMethodSequence([error, error], delayMs: 150);
+  }
+
+  /// Plays a countdown sequence (3, 2, 1)
+  static Future<void> countdownSequence() {
+    if (Platform.isAndroid) {
+      return playSequence([
+        AndroidSoundIDs.TONE_DTMF_3,
+        AndroidSoundIDs.TONE_DTMF_2,
+        AndroidSoundIDs.TONE_DTMF_1,
+      ], delayMs: 1000);
+    } else {
+      return playSequence([
+        iOSSoundIDs.TouchTone3,
+        iOSSoundIDs.TouchTone2,
+        iOSSoundIDs.TouchTone1,
+      ], delayMs: 1000);
+    }
+  }
+}
+
+/// Sound category presets for easy discovery
+class BeepCategory {
+  /// DTMF Touch tone sounds (0-9, *, #, A-D)
+  static List<int> get dtmfTones => Platform.isAndroid
+      ? [
+          AndroidSoundIDs.TONE_DTMF_0,
+          AndroidSoundIDs.TONE_DTMF_1,
+          AndroidSoundIDs.TONE_DTMF_2,
+          AndroidSoundIDs.TONE_DTMF_3,
+          AndroidSoundIDs.TONE_DTMF_4,
+          AndroidSoundIDs.TONE_DTMF_5,
+          AndroidSoundIDs.TONE_DTMF_6,
+          AndroidSoundIDs.TONE_DTMF_7,
+          AndroidSoundIDs.TONE_DTMF_8,
+          AndroidSoundIDs.TONE_DTMF_9,
+        ]
+      : [
+          iOSSoundIDs.TouchTone1,
+          iOSSoundIDs.TouchTone2,
+          iOSSoundIDs.TouchTone3,
+          iOSSoundIDs.TouchTone4,
+          iOSSoundIDs.TouchTone5,
+          iOSSoundIDs.TouchTone6,
+          iOSSoundIDs.TouchTone7,
+          iOSSoundIDs.TouchTone8,
+          iOSSoundIDs.TouchTone9,
+          iOSSoundIDs.TouchTone10,
+        ];
+
+  /// Notification sounds
+  static List<int> get notifications => Platform.isAndroid
+      ? [
+          AndroidSoundIDs.TONE_PROP_BEEP,
+          AndroidSoundIDs.TONE_PROP_BEEP2,
+          AndroidSoundIDs.TONE_PROP_PROMPT,
+        ]
+      : [
+          iOSSoundIDs.SMSReceived,
+          iOSSoundIDs.MailReceived,
+          iOSSoundIDs.CalendarAlert,
+          iOSSoundIDs.VoicemailReceived,
+        ];
+
+  /// Alert/warning sounds
+  static List<int> get alerts => Platform.isAndroid
+      ? [
+          AndroidSoundIDs.TONE_SUP_ERROR,
+          AndroidSoundIDs.TONE_CDMA_ABBR_ALERT,
+          AndroidSoundIDs.TONE_CDMA_ALERT_CALL_GUARD,
+          AndroidSoundIDs.TONE_CDMA_ALERT_NETWORK_LITE,
+        ]
+      : [
+          iOSSoundIDs.AudioToneError,
+          iOSSoundIDs.LowPower,
+          iOSSoundIDs.USSDAlert,
+          iOSSoundIDs.FailedUnlock,
+        ];
+
+  /// Success/acknowledgment sounds
+  static List<int> get success => Platform.isAndroid
+      ? [
+          AndroidSoundIDs.TONE_PROP_ACK,
+          AndroidSoundIDs.TONE_SUP_CONFIRM,
+          AndroidSoundIDs.TONE_CDMA_CONFIRM,
+        ]
+      : [
+          iOSSoundIDs.Headset_AnswerCall,
+          iOSSoundIDs.JBL_Confirm,
+          iOSSoundIDs.ConnectedToPower,
+        ];
+
+  /// Phone/call sounds
+  static List<int> get callSounds => Platform.isAndroid
+      ? [
+          AndroidSoundIDs.TONE_SUP_RINGTONE,
+          AndroidSoundIDs.TONE_SUP_BUSY,
+          AndroidSoundIDs.TONE_SUP_CALL_WAITING,
+          AndroidSoundIDs.TONE_SUP_DIAL,
+        ]
+      : [
+          iOSSoundIDs.VCRinging,
+          iOSSoundIDs.AudioToneBusy,
+          iOSSoundIDs.AudioToneCallWaiting,
+          iOSSoundIDs.VCCallWaiting,
+        ];
 }
 
 class AndroidSoundIDs {

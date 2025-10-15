@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0'
+        classpath 'com.android.tools.build:gradle:8.1.4'
     }
 }
 
@@ -23,12 +23,12 @@ apply plugin: 'com.android.library'
 
 android {
     namespace "com.gonoter.flutter_beep"
-    compileSdkVersion 31
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
     }
-    lintOptions {
+    lint {
         disable 'InvalidPackage'
     }
 }
